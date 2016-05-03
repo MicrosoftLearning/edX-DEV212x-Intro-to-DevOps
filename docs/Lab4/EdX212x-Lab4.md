@@ -1,5 +1,9 @@
-HOL - Parts Unlimited WebSite Continuous Delivery with Visual Studio Online & Release Management Online
-====================================================================================
+# EdX 212x Intro to DevOps - LAB 4 #
+This is the Hands on Lab for module 4 of the Intro to DevOps course.
+
+## LAB 4 - Continuous Delivery with Visual Studio Team Services ##
+Once you have completed the videos and other course material for Module 4, you can continue with this lab.
+
 In this lab we have an application called PartsUnlimited. We want to set up
 Visual Studio Online to be able continuously integrate code into the master
 branch of code. This means that whenever code is committed and pushed to the

@@ -1,5 +1,9 @@
-HOL - Parts Unlimited WebSite Continuous Integration with Visual Studio Team Services
-====================================================================================
+# EdX 212x Intro to DevOps - LAB 3 #
+This is the Hands on Lab for module 3 of the Intro to DevOps course.
+
+## LAB 3 - Continuous Integration with Visual Studio Team Services ##
+Once you have completed the videos and other course material for Module 3, you can continue with this lab.
+
 In this lab we have an application called PartsUnlimited. We want to set up
 Visual Studio Team Services to be able continuously integrate code into the master
 branch of code. This means that whenever code is committed and pushed to the
