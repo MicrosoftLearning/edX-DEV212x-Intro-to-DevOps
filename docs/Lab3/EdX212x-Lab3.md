@@ -187,16 +187,3 @@ We will now test the **Continuous Integration build (CI)** build we created in *
 **4.** Click on the **Build Number**, and you should get a build summary similar to this, which includes test results.
 
 ![](<media/49.jpg>)
-
-Next steps
-----------
-
-In this lab, you learned how to push new code to Visual Studio Team Services, setup a Git repo and create a Continuous
-Integration build that runs when new commits are pushed to the master branch.
-This allows you to get feedback as to whether your changes made breaking syntax
-changes, or if they broke one or more automated tests, or if your changes are a
-okay. 
-
-Try these labs out for next steps:
-
--   <a href="https://github.com/Microsoft/PartsUnlimited/blob/hands-on-labs/docs/HOL_PartsUnlimited_WebSite_Continuous_Deployment/HOL_Continuous_Deployment_Release_Management.md">Continuous Deployment with Release Management in Visual Studio Team Services</a>
