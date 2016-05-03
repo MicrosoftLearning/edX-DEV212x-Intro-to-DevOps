@@ -5,7 +5,7 @@ This is the Hands on Lab for module 3 of the Intro to DevOps course.
 Once you have completed the videos and other course material for Module 3, you can continue with this lab.
 
 In this lab we have an application called PartsUnlimited. We want to set up
-Visual Studio Team Services to be able continuously integrate code into the master
+Visual Studio Team Services (VSTS) to be able continuously integrate code into the master
 branch of code. This means that whenever code is committed and pushed to the
 master branch, we want to ensure that it integrates into our code correctly to
 get fast feedback. To do so, we are going to be setting up a Continuous Integration build (CI) that
@@ -14,21 +14,17 @@ pushed to Visual Studio Team Services.
 
 ###Pre-requisites:###
 
--   An active Visual Studio Team Services account
-
--   An Visual Studio 2015 Update 2 or Visual Studio 2013 Update 5 client
-
--   Project Admin rights to the Visual Studio Team Services account
+-   Make sure you have completed [LAB 1](../Lab1/EdX212x-Lab1.md) to set up your VSTS account and Visual Studio Community.
 
 ### Tasks Overview: ###
 
-**1. Setup your Visual Studio Team Services Account using Visual Studio:** In this step, you will connect your own Visual Studio Team Services account, download the PartsUnlimited source code, and then push it to your own Visual Studio Team Services account. 
+**1. Import Source Code into your VSTS Account:** In this step, you will connect your own Visual Studio Team Services account, download the PartsUnlimited source code, and then push it to your own Visual Studio Team Services account. 
 
 **2. Create Continuous Integration Build:** In this step, you will create a build definition that will be triggered every time a commit is pushed to your repository in Visual Studio Team Services. 
 
 **3. Test the CI Trigger in Visual Studio Team Services:** In this step, test the Continuous Integration build (CI) build we created by changing code in the Parts Unlimited project with Visual Studio Team Services. 
 
-### 1: Setup your Visual Studio Team Services Account using Visual Studio
+### 1: Import Source Code into your VSTS Account
 
 We want to push the application code to your Visual Studio Team Services account in
 order to use Build.
@@ -38,15 +34,15 @@ page**:
 
 	https://<account>.visualstudio.com
 
-**2.** Connect to the VSTS account project using Visual Studio.
+**2.** Connect to the VSTS account project (you may have called it EdX in Module 1) using Visual Studio (Note: in this image the Project is called HOL).
 
 ![](<media/25.jpg>)
 
 > **Talking Point:** For this lab we are using the VSTS Git project. The next couple of steps will allow you to add the PartUnlimited source to the Git master repository.
 
-**3.** Navigate to [https://github.com/Microsoft/PartsUnlimited/tree/aspnet45](https://github.com/Microsoft/PartsUnlimited/tree/aspnet45) and download the sample as a zip
+**3.** Navigate to [https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps) and download the repository as a zip.
 
-> **Note:** For this lab is vitally IMPORTANT THAT YOU GET THE 4.5 BRANCH!
+![](<media/download.png>)
 
 **4.** Create folder and save the download to this folder.
 
@@ -54,7 +50,7 @@ Create **Working Directory** to the following location:
 
 `C:\Source\Repos\HOL`
 
-**5.** Unzip the PartsUnlimited project, when unzipping be sure and “Unblock” the content or the deployment scripts won’t run
+**5.** Unzip the zip file. Note: when unzipping be sure and “Unblock” the content or the deployment scripts won’t run
 
 ![](<media/21.jpg>)
 
