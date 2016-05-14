@@ -1,13 +1,13 @@
 # EdX DEV212x Intro to DevOps - LAB 1 #
 This is the Hands on Lab for module 1 of the Introduction to DevOps course.
 
-## LAB 1 - Setting up a Visual Studio Team Services Account ##
+## LAB 1 - Setting up a Visual Studio Team Services (VSTS) Account ##
 
 ### Prerequisites ###
 You will need the following in order to complete the hands on labs:
 
 - Visual Studio 2015 Community (or higher) 
-- a Visual Studio Team Services (VSTS) account
+- a Visual Studio Team Services account
 
 #### Visual Studio Community ####
 If you do not have Visual Studio 2015 Professional or Enterprise editions, then you can download and
