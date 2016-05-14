@@ -13,7 +13,7 @@ You will need the following in order to complete the hands on labs:
 If you do not have Visual Studio 2015 Professional or Enterprise editions, then you can download and
 install [Visual Studio 2015 Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free.
 
-#### Create a Visual Studio Team Services (VSTS) Account) ####
+#### Create a Visual Studio Team Services (VSTS) Account ####
 > **Note**: If you already have a VSTS account, you can skip this step. However, you need to ensure that it is an account in which you are the account owner. In other words, if you create the account yourself, you can skip this step and just sign into your account. However, if some else created the account and added you to the account, then you will need to complete this step. Once you have signed into your existing account, then create a new Team Project as specified in [Task 2](#Ex4Task2).
 
 1. Sign into [visualstudio.com](https://go.microsoft.com/fwlink/?LinkId=307137).
