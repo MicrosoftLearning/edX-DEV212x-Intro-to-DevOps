@@ -2,7 +2,6 @@
 This is the Hands on Lab for module 1 of the Introduction to DevOps course.
 
 ## LAB 1 - Setting up a Visual Studio Team Services Account ##
-Once you have completed the videos and other course material for Module 1, you can continue with this lab.
 
 ### Prerequisites ###
 You will need the following in order to complete the hands on labs:
