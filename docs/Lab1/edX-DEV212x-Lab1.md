@@ -9,19 +9,15 @@ is technology stack agnostic, the Visual Studio Team Services (VSTS) and Azure p
 Both VSTS and Azure are accessible from a web browser (any operating system) and provide a free tier that is used in this class.
 Additionally, only a web browser is required to complete the labs in this course.
 
-## LAB 1 - Setting up a Visual Studio Team Services (VSTS) Account ##
+## LAB 1 - Signing up and configuring lab dependencies and prerequisites ##
+The written labs in this course depend on several free prerequisites. However, if you choose, you can use whatever infrastructure platform, release management pipeline and version control system that you like.  However, if you do so, you'll need to translate the labs into your own chosen tools.
 
 ### Prerequisites ###
 You will need the following in order to complete the hands on labs:
 
 - a Visual Studio Team Services account 
 - an Azure account
-- a git client for your host OS (on a Windows OS, Visual Studio 2015 Community (or higher) can be used, although it is not required.
-
-#### Optional - Visual Studio Community ####
-If you are on a Windows OS, and do not have Visual Studio 2015 Professional or Enterprise editions, then you can download and
-install [Visual Studio 2015 Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free. It is not required for any of the labs, however it will be used in some of the demos. In every case, alternate approaches (browser or git command line) will be demonstrated.
-
+- a git client for your host OS (on a Windows OS, Visual Studio 2015 Community (or higher) can be used, although it is not required)
 
 #### Create a Visual Studio Team Services (VSTS) Account ####
 > **Note**: If you already have a VSTS account, you can skip this step. However, you need to ensure that it is an account in which you are the account owner. In other words, if you create the account yourself, you can skip this step and just sign into your account. However, if some else created the account and added you to the account, then you will need to complete this step. Once you have signed into your existing account, then create a new Team Project as specified in [Task 3](#Ex4Task2).
@@ -69,3 +65,24 @@ install [Visual Studio 2015 Community](https://www.visualstudio.com/en-us/produc
     ![The Team Project Dashboard](media/vsts-team-project-dashboard.png "The Team Project Dashboard")
 
     _The Team Project Dashboard_
+    
+    
+#### Create a Free Azure Trial account ####
+> **Note**: If you already have an Azure account, you can skip this step. However, you need to ensure that it is an account in which you are the account owner or administrator. In other words, if you create the account yourself, you can skip this step and just sign into your account. However, if someone else created the account and added you to the account, then you will need to ensure you have sufficient permissions. 
+
+To sign up for the Azure Free Trial, visit [Azure Free Trial](https://azure.microsoft.com/en-us/pricing/free-trial/), and log in with a Microsoft ID. (You can use the same ID you created or used when setting up the VSTS account.) _One catch is that you will need a credit card._ This card is not charged, but it used to prevent bots from creating hundreds of free trials and getting free compute. 
+
+If you'd like to watch a video, showing how to sign up for a free Azure trial, visit the [Sign up for Azure](https://channel9.msdn.com/Blogs/Windows-Azure/Sign-up-for-Microsoft-Azure) video on Channel9.
+
+Alternatively, if you have an MSDN subscription, you can activate your free, monthly Azure credits (up to $150/month). Details can be found at the [Azure MSDN Benefits](https://azure.microsoft.com/en-us/pricing/member-offers/msdn-benefits/) site.
+
+#### Git client - OS specific ####
+> **Note**: If you already have a Git client installed, this step is not required. However, if you do not have a Git command line, then you will need to translate the labs (and demo videos) into your graphical Git tool. If you choose, you can use Visual Studio Community on Windows as a graphical tool.  However, I personally recommend getting comfortable with Git from the command line.
+
+Download and install an OS specific Git client by following the directions at the [Git download site](https://git-scm.com/downloads).
+    
+#### Optional - Visual Studio Community ####
+If you are on a Windows OS, and do not have Visual Studio 2015 Professional or Enterprise editions, then you can download and
+install [Visual Studio 2015 Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free. It is not required for any of the labs, however it will be used in some of the demos. In every case, alternate approaches (browser or git command line) will be demonstrated.
+
+
