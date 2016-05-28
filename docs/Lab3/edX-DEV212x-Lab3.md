@@ -1,4 +1,4 @@
-# EdX 212x Intro to DevOps - LAB 3 #
+# EdX DEV212x Intro to DevOps - LAB 3 #
 This is the Hands on Lab for module 3 of the Intro to DevOps course.
 
 ## LAB 3 - Continuous Integration with Visual Studio Team Services ##
@@ -14,7 +14,7 @@ pushed to Visual Studio Team Services.
 
 ###Pre-requisites:###
 
--   Make sure you have completed [LAB 1](../Lab1/EdX212x-Lab1.md) to set up your VSTS account and Visual Studio Community.
+-   Make sure you have completed [LAB 1](../Lab1/EdX212x-Lab1.md) to set up your VSTS account.
 
 ### Tasks Overview: ###
 
