@@ -18,7 +18,7 @@ pushed to Visual Studio Team Services.
 
 ### Tasks Overview: ###
 
-**1. Import Source Code into your VSTS Account:** In this step, you will connect your own Visual Studio Team Services account, download the PartsUnlimited source code, and then push it to your own Visual Studio Team Services account. There are two approaches to doing this. 1) Use the Git command line, or 2) Use Visual Studio. The Git command line is the cleanest and easiest approach, but it does require some familiarity with Git. The lab documentation shows the Visual Studio approach, but the videos show both approaches. 
+**1. Import Source Code into your VSTS Account:** In this step, you will connect your own Visual Studio Team Services account, download the PartsUnlimited source code, and then push it to your own Visual Studio Team Services account. There are two approaches to doing this. 1) Use the Git command line, or 2) Use Visual Studio. The Git command line is the cleanest and easiest approach, but it does require some familiarity with the Git command line. 
 
 **2. Create Continuous Integration Build:** In this step, you will create a build definition that will be triggered every time a commit is pushed to your repository in Visual Studio Team Services. 
 
