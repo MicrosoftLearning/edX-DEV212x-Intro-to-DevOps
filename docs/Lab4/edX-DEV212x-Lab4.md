@@ -1,4 +1,4 @@
-# EdX 212x Intro to DevOps - LAB 4 #
+# EdX DEV212x Intro to DevOps - LAB 4 #
 This is the Hands on Lab for module 4 of the Intro to DevOps course.
 
 ## LAB 4 - Release Management with Visual Studio Team Services ##
