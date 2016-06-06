@@ -103,19 +103,28 @@ In order to interact with Azure, you'll need to create a Service Endpoint in VST
 authentication information required to deploy to Azure.
 
 > **Note**: Deploying [ARM Templates](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authoring-templates/)
-to Azure from Release Management requires an organizational account or a [Service Principal](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-build-release-management.aspx).
-MSA Accounts and certificate-based connections are not supported. For this HOL, you will use an organizational account, but you can 
-create a Service Principal if you wish to.
+to Azure from Release Management requires a [Service Principal](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-build-release-management.aspx).
+Microsoft Accounts (like the one you're likely using to sign into Azure), Organization Acounts and certificate-based connections are not supported. For this HOL, you will need to create a Service Principal (which resides inside an Azure Active Directory). Until recently, you could simply use an organizational account, however security changes in Azure now require a Service Principal. 
 
-1. Create an organizational account in Azure
-	* Create a user in the Azure Active Directory from the old Azure portal (https://manage.windowsazure.com). If you do not have
-	a custom domain, then use the `onmicrosoft.com` domain (the default domain). The user should be something like `testuser@myazure.onmicrosoft.com`
-	* After adding the account, the following two things need to be done to use the account during a VSTS release:
-		* Add the Active Directory account to the co-administrators in the subscription. Go to the Settings hub (click on the Gear
-		icon in the left-hand main menu) and then click on administrators and add the account as a co-admin.
-		* Login to the portal with this Active Directory account (e.g. `testuser@myazure.onmicrosoft.com`, and change the password.
-		Initially a temporary password is created and that needs to be changed at the first login.
+> Unfortunately, creating a Service Principal is not trivial. _This part of the lab will require substantial independent work, as the steps are currently complicated. Microsoft is working on making this easier. 
 
+1. Find you Subscription Name and Subscription ID
+	* Browse to http://portal.azure.com and click on "Subscriptions".
+	![](media/4.png)
+	* Copy the Subscription Id and Subscription Name for your Azure subscription. 
+	
+1. Create a Service Principal.
+
+	There are three avenues to create a Service Principal. Follow the instructions very carefully for the approach you are using.  You will need to retrieve the following information to enter into VSTS Release Management: Subscription Id, Subscription Name, Service Principal Id, Service Principal Key, and Tenant Id. If you don't want to install either Azure Powershell or the Azure CLI, then use the Web browser approach.
+
+	* **Azure Powershell** (on Windows) can be found at [Automating Azure Resource Group deployment using a Service Principal in Visual Studio Online: Build/Release Management]https://blogs.msdn.microsoft.com/visualstudioalm/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/)
+	
+	Unfortunately, the graphics in the above link are outdated.  However, You will only need to follow the first steps and run [this Powershell](https://raw.githubusercontent.com/Microsoft/vso-agent-tasks/master/Tasks/DeployAzureResourceGroup/SPNCreation.ps1) script. That will return the information you need.
+	
+	Alternatively, you can visit [Use Azure PowerShell to create an Active Directory application to access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal/) to gather the required information.  This takes you through each step.  And gets the required information.
+	* **Azure CLI** (on Mac, Linux and other non-Windows operating systems) can be found at [Use Azure CLI to create an Active Directory application to access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal-cli/)
+	* **Web browser** (on any OS) can be found at [Use portal to create Active Directory application that can access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-create-service-principal-portal/). Be sure to get the Client ID (which will be used as the Service Principal Id, and the Key (which will be used as the Service Principal Key).  
+	
 2. Create an Azure Service Endpoint in Visual Studio Team Services
 	* Log in to your VSTS account.
 	* Open the project administration page by clicking the gear icon in the upper right.
@@ -124,26 +133,14 @@ create a Service Principal if you wish to.
 	* Click on the Services tab
 	
 		![](media/2.png)
-	* Click on "New Service Endpoint" and select Azure from the list
+	* Click on "New Service Endpoint" and select "Azure Resource Manager" from the list
 	
-		![](media/3.png)
-	* Click on the "Credentials" radio button
-		* Enter any name for the Connection Name - this is to identify this Service Endpoint in VSTS.
-		* Copy the Subscription Id and Subscription Name for your Azure subscription. You can get this
-		by logging into the new Azure portal and clicking "Subscriptions".
-
-		![](media/4.png)
-		
-		* Enter the username and password of the user you created in the previous Task. Click OK.
+		![](media/serviceEndpoint.png)
+	* Come up with a memorable Connection Name, then enter the Subscription Id, Subscription Name, Service Principal Id, Service Principal Key, and Tenant Id you gathered in the previous steps. Click OK.
 	
-		![](media/41.png)
+		![](media/enterServiceEndpointData.png)
 	* You should see a new Service Endpoint. You can close the project administration page.
 	
-	![](media/5.png)
-    
-    * Repeat the above steps to create a "New Service Endpoint" but select the "Certificate" radio button
- 
-
 ### 4: Create a Release Definition
 Now that you have an Azure Service Endpoint to deploy to, and a package to deploy (from your CI build),
 you can create a Release Definition. The Release Definition defines how your application moves through
