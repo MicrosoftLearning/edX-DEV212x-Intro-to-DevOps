@@ -94,7 +94,9 @@ group in order to minimize charges to your Azure account.
 	* For `Artifact Name`, enter "ARMTemplates"
 	* For `Artifact Type`, select "Server" 
 6. Queue a new build by clicking the "Queue build" button. Accept the defaults and click OK.
-7. When the build has completed, verify that there are 2 folders: drop and ARMTemplates.
+7. When the build has completed, verify that there are 2 folders: drop and ARMTemplates. The can be found under the artifacts tab of the build results.
+
+![](media/viewArtifacts.png)
 	* The drop folder should contain a single file: PartsUnlimitedWebsite.zip (click "Explore" to view the contents)
 	* The ARMTemplates folder should contain a number of json files.
 
