@@ -279,17 +279,16 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 	* Click on the Dev environtment in the Release Definition. Then click "+ Add tasks".
 	* Select the "Deploy" group in the left and click the add button next to "Azure Web App Deployment" to add the task.
 Close the task selector dialog.
-	* Click on the "Azure Web App Deployment" Task.
-		* Select the Azure Service Endpoint you created earlier in the Azure Subscription drop down.
-		* For Web App Name, enter the `$(WebsiteName)` to use a variable. You defined this variable earlier when deploying
-		the ARM Template. You will shortly "promote" it to a Release variable so that it can be used in all Environments in the Release.
-		* Select the same Azure region for your Web App that you selected in the "Azure Resource Group Deployment" task.
-		* Enter "dev" for the Slot. This will deploy the site to the "dev" deployment slot. This allows you
+	* Click on the "Azure Web App Deployment" Task. And configure according to the steps below.
+		* `Azure Subscription`: select the Azure Service Endpoint you created earlier in the Azure Subscription drop down.
+		* `Web App Location`: use the same Azure region for your Web App that you selected in the "Azure Resource Group Deployment" task
+		* `Web App Name`: enter `$(WebsiteName)` to use a variable. You defined this variable earlier when deploying
+		* `Slot`: enter "dev". This will deploy the site to the "dev" deployment slot. This allows you
 		to deploy the site to an Azure deployment slot without affecting the Production site.
-		* Click the ellipsis (...) button to set the Web Deploy Package location. Browse to the PartsUnlimitedWebsite.zip file and click OK.
+		* `Web Deploy Package`: click the ellipsis (...) button and browse to the PartsUnlimitedWebsite.zip file and click OK.
 	
 		![](media/10.png)
-		* Clear the "Additional Arguments" parameter. The ARM template you deployed has already configured all the slot-specific
+		* `Additional Arguments`: clear the "Additional Arguments" parameter as the ARM template you deployed has already configured all the slot-specific
 		app settings and connection strings.
 		* The Task should look like this:
 	
@@ -299,7 +298,7 @@ Close the task selector dialog.
 	information on quick load tests, see [this video](https://channel9.msdn.com/Events/Visual-Studio/Connect-event-2015/Cloud-Loading-Testing-in-Visual-Studio-Team-Service)
 	from around the 6 minute mark. 
 	
-	* Promote the WebSite Environment variable to a Release Variable
+	* Promote the WebSite Environment variable to a Release Variable so it can be used across multiple environments.
 		* Click on the "Dev" environment, click the ellipsis (...) button select "Configure Variables".
 		* Make a note of the `WebsiteName` variable value and delete it from this list. Click OK.
 		* Click on "Configuration" to open the Release variables. These are "global" variables that any Environment can use.
@@ -319,7 +318,8 @@ Close the task selector dialog.
 	![](media/15.png)
 	* You can enter a Release Description if you want to.
 	* Select the latest build from the HOL Build drop down.
-	* Click on the Dev Environment to set it as the target environment for this Release. Click Create.
+	* If necessary, click on the Dev Environment to set it as the target environment for this Release. 
+	* Click Create.
 	* Click the Release link to open the Release.
 	
 	![](media/21.png)
@@ -419,7 +419,7 @@ environment is good, and then click Approve.
 	![](media/38.png)
 
 	* This will trigger the release into the Staging environment.
-	> **Note**: You can reassign the approval if required.
+	> **Note**: You can reassign the approval if required. Also, you may choose to have fewer approval steps to go from one environment to the next. 
 * The deployment will immediately pause again - this time for an incoming approval to Staging.
 * Approve the incoming deployment for Staging.
 * Once the Staging deployment has completed, you will need to approve that
