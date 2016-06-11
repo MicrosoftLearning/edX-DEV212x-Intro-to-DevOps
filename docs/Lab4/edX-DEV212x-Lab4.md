@@ -108,7 +108,7 @@ authentication information required to deploy to Azure.
 to Azure from Release Management requires a [Service Principal](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-build-release-management.aspx).
 Microsoft Accounts (like the one you're likely using to sign into Azure), Organization Acounts and certificate-based connections are not supported. For this HOL, you will need to create a Service Principal (which resides inside an Azure Active Directory). Until recently, you could simply use an organizational account, however security changes in Azure now require a Service Principal. 
 
-> Unfortunately, creating a Service Principal is not trivial. _This part of the lab will require substantial independent work, as the steps are currently complicated. Microsoft is working on making this easier. 
+> Unfortunately, creating a Service Principal is not trivial. This part of the lab will require substantial independent work, as the steps are currently complicated. Microsoft is working on making this easier. 
 
 1. Find you Subscription Name and Subscription ID
 	* Browse to http://portal.azure.com and click on "Subscriptions".
@@ -119,7 +119,7 @@ Microsoft Accounts (like the one you're likely using to sign into Azure), Organi
 
 	There are three avenues to create a Service Principal. Follow the instructions very carefully for the approach you are using.  You will need to retrieve the following information to enter into VSTS Release Management: Subscription Id, Subscription Name, Service Principal Id, Service Principal Key, and Tenant Id. If you don't want to install either Azure Powershell or the Azure CLI, then use the Web browser approach.
 
-	* **Azure Powershell** (on Windows) can be found at [Automating Azure Resource Group deployment using a Service Principal in Visual Studio Online: Build/Release Management]https://blogs.msdn.microsoft.com/visualstudioalm/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/)
+	* **Azure Powershell** (on Windows) can be found at [Automating Azure Resource Group deployment using a Service Principal in Visual Studio Online: Build/Release Management](https://blogs.msdn.microsoft.com/visualstudioalm/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/)
 	
 	Unfortunately, the graphics in the above link are outdated.  However, You will only need to follow the first steps and run [this Powershell](https://raw.githubusercontent.com/Microsoft/vso-agent-tasks/master/Tasks/DeployAzureResourceGroup/SPNCreation.ps1) script. That will return the information you need.
 	
@@ -189,11 +189,12 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 		![](media/42.png)
 		
 	* Click on the "Azure Resource Group Deployment" task. Configure it as follows:
-		* `Azure Subscription`: select the Azure subscription endpoint that you created in Task 2
+		* `Azure Connection Type`: select "Azure Resource Manager"
+		* `Azure RM Subscription`: select the Azure endpoint that you created in Task 2
 		* `Action`: select "Create or Update Resource Group"
 		* `Resource Group`: enter a name for your resource group. This must be unique in your Azure
 		subscription.
-		* `Location`: select an Azure location
+		* `Location`: select an Azure geographic location
 		* `Template`: click the "..." button and browse to the FullEnvironmentSetupMerged.json file in the ARMTemplates
 		folder.
 		
@@ -222,16 +223,18 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 		> new build in order for the Release to have access the new values.
 		
 		* Make sure the `Output -> Resource Group` parameter is empty. It is not required for this release.
-	
+		* Your configuration should look something like the following:
+		![](media\configureArmStep.png)
+		
 	* Click on the ellipsis (...) button next to the Environment and select "Configure variables..."
 
 		![](media/44.png)
 
 	* Create the following variables, adding values too.
-		* **WebsiteName** - Name of the website in Azure
+		* **WebsiteName** - Name of the website in Azure (this must be globally unique)
 		* **ServerName** - Prefix for the name of the database servers. Will have `-dev` or `-stage` added for dev/staging
 		* **HostingPlan** - Name of the hosting plan for the website
-		* **StorageAccountName** - Storage account name prefix. Will have `-dev` or `-stage` added for dev/staging
+		* **StorageAccountName** - Storage account name prefix. Will have `-dev` or `-stage` added for dev/staging. (Be careful with naming storage accounts, they must be all lower case, alphanumeric only, between 3 and 24 characters, and globally unique.)
 		* **ContainerName** - Container name prefix. Will have `-dev` or `-stage` added for dev/staging
 		* **AdminPassword** - Admin password for production database server
 		* **AdminTestPassword** - Admin password for dev and staging database servers
@@ -263,9 +266,11 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 	* You should see a successful release after a few minutes.
 
 	![](media/51.png)
-	* If you log into the Azure Portal, you will see the Resource Group has been created.
+	* If you log into the Azure Portal, you will see the Resource Group has been created. By drilling into the Resources, you can see all of the resources automatically created by executing this task.
 
 	![](media/52.png)
+	
+	> NOTE: You can run this task repeatedly, it is idempotent. Additionally, updates to the underlying template will modify an already deployed Resource Group.
 	
 1. Add Web Deployment Tasks to Deploy the Web App
 
