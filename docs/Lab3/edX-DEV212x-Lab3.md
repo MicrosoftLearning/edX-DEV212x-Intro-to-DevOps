@@ -93,7 +93,9 @@ Congratulations, your code should now be in VSTS!
 
 ### 1b: Import Source Code into your VSTS Account with Visual Studio
 
-> Note: Use this to approach to use the Visual Studio to migrate code from GitHub to VSTS. If you use this approach, skip section 1a.
+> Note: Use this to approach to use the Visual Studio to migrate code from GitHub to VSTS. If you use this approach, skip section 1a.  ** *If you have any difficulties with this approach, please use the Git command line approach above. It is much simpler, and far less prone to error.* **
+
+
 
 We want to push the application code to your Visual Studio Team Services account in
 order to use Build.
@@ -167,6 +169,8 @@ the page. Verify the source is in the repo.
 A continuous integration build will give us the ability check whether the code
 we checked in can compile and will successfully pass any automated tests that we
 have created against it.
+
+> **NOTE:** If you migrated your code using the Git command line (1a above), you did not create an "HOLRepo" branch in your Git repo. For the purposes of the remainder of the lab, either use "master" in place of "HOLRepo", or create and push an "HOLRepo" branch based off of master.
 
 **1.** Go to your **account’s homepage**: 
 
