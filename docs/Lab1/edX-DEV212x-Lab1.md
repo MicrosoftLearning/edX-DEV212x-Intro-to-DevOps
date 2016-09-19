@@ -1,4 +1,4 @@
-# edX DEV212x Intro to DevOps - LAB 1 #
+# edX DEV212x Intro to DevOps - LAB 1, Signing up and configuring lab dependencies and prerequisites #
 This is the Hands on Lab for module 1 of the Introduction to DevOps course.
 
 The objectives of the labs in this course are to walk through the creation of a DevOps / continuous delivery pipeline that includes infrastructure-as-code, configuration-as-code, as well as code deployment. Although the labs aren't required to successfully complete this course, I highly recommend it, as creating a pipeline really gives you a feel for the power of DevOps.
@@ -11,7 +11,7 @@ Additionally, only a web browser is required to complete the labs in this course
 
 The written labs in this course depend on several free prerequisites. However, if you choose, you can use whatever infrastructure platform, release management pipeline and version control system that you like.  However, if you do so, you'll need to translate the labs into your own chosen tools.
 
-##Tasks
+### Tasks Overview
 1. Create a Visual Studio Team Services (VSTS) account
 2. Create an Azure Free Trial account
 3. Download and install Git
