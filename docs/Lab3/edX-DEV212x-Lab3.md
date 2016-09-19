@@ -1,7 +1,6 @@
-# EdX DEV212x Intro to DevOps - LAB 3 #
+# edX DEV212x Intro to DevOps - LAB 3, Continuous Integration with Visual Studio Team Services #
 This is the Hands on Lab for module 3 of the Intro to DevOps course.
 
-## LAB 3 - Continuous Integration with Visual Studio Team Services ##
 Once you have completed the videos and other course material for Module 3, you can continue with this lab.
 
 In this lab we have an application called PartsUnlimited. We want to set up
@@ -14,7 +13,7 @@ pushed to Visual Studio Team Services.
 
 ###Pre-requisites:###
 
--   Make sure you have completed [LAB 1](../Lab1/EdX212x-Lab1.md) to set up your VSTS account.
+-   Make sure you have completed [LAB 1](../Lab1/EdX212x-Lab1.md) to set up your VSTS account and install Git. 
 
 ### Tasks Overview: ###
 
@@ -24,36 +23,32 @@ pushed to Visual Studio Team Services.
 
 **3. Test the CI Trigger in Visual Studio Team Services:** In this step, test the Continuous Integration build (CI) build we created by changing code in the Parts Unlimited project with Visual Studio Team Services. 
 
-### 1a: Import Source Code into your VSTS Account with Git
+## 1a: Import Source Code into your VSTS Account with Git Command Line
 
-> Note: Use this to approach to use the Git command line to migrate code from GitHub to VSTS. If you use this approach, skip section 1b.
+> Note: Use this to approach to use the Git command line to migrate code from GitHub to VSTS. Make sure that you have installed Git and added it to the path from the [task in Lab 1](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps/blob/master/docs/Lab1/edX-DEV212x-Lab1.md#task-3---download-and-install-git). If you use this approach, skip section 1b. 
 
 We want to push the application code to your Visual Studio Team Services account in
 order to use Build.
 
-> **Talking Point:** For this lab we are using the VSTS Git project. The next couple of steps will allow you to add the PartUnlimited source to the Git master repository.
-
-**1.** (Optional) Navigate to [https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps) and copy the URL to the repo. (These steps all use the HTTPS protocol.)  This step will save you from having to type the full URL later.
+**1.** Navigate to [https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps) and copy the URL to the repo. (These steps all use the HTTPS protocol.)  This step will save you from having to type the full URL later.
 
 ![](<media/clone.png>)
 
-**2.** Clone the repository to a local directory.
-
-Create a parent **Working Directory** on your local file system. For instance, on a Windows OS you can create the following directory:
+**2.** Create a parent **Working Directory** on your local file system. For instance, on Windows OS you can create the following directory:
 
 `C:\Source\Repos`
 
-Open a command line (one that supports Git) and change to the directory you created above.
+Open a command line window (one that supports Git such as Git Bash) and change to the directory you created above. If not using Git Bash, ensure that Git is in the path for a command line window by typing in `git`. If it isn't, either use Git Bash (installed by default) instead or follow the last steps from the [task in Lab 1](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps/blob/master/docs/Lab1/edX-DEV212x-Lab1.md#task-3---download-and-install-git) to add it to the path again with the installation bits. 
 
-Clone the repository with the following command. You can paste in the URL if you copied it in Step 1.  In the example below, the clone will be copied into a directory named HOL. Feel free to use whatever directory name you like, or leave it blank to use the default directory name:
+Clone the repository with the following command. You can paste in the URL if you copied it in Step 1.  In the example below, the clone will be copied into a directory named `PartsUnlimited`. Feel free to use whatever directory name you like, or leave it blank to use the default directory name:
 
-	git clone https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps.git HOL
+	git clone https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps.git PartsUnlimited
 
 After a few seconds of downloading, all of the code should now be on your local machine.
 
-Move into the directory that was just created.  In a Windows OS (and assuming you used HOL as the directory name), you can use this command:
+Move into the directory that was just created.  In a Windows OS (and assuming you used PartsUnlimited as the directory name), you can use this command:
 
-	cd HOL
+	cd PartsUnlimited
 
 **3.** Remove the link to GitHub. 
 
@@ -63,7 +58,7 @@ To delete the GitHub remote, use:
 
 	git remote remove origin
 
-To rename the GitHub remote, use:
+Otherwise, to rename the GitHub remote, use:
 
 	git remote rename origin github
 
@@ -89,13 +84,12 @@ In the local directory from Step 3, use the following command to add VSTS as the
 Now you can push the code, including history, to VSTS:
 
 	git push -u origin --all	
+
 Congratulations, your code should now be in VSTS!
 
 ### 1b: Import Source Code into your VSTS Account with Visual Studio
 
 > Note: Use this to approach to use the Visual Studio to migrate code from GitHub to VSTS. If you use this approach, skip section 1a.  ** *If you have any difficulties with this approach, please use the Git command line approach above. It is much simpler, and far less prone to error.* **
-
-
 
 We want to push the application code to your Visual Studio Team Services account in
 order to use Build.
@@ -107,21 +101,20 @@ page**:
 
 **2.** Connect to the VSTS account project (you may have called it EdX in Module 1) using Visual Studio (Note: in this image the Project is called HOL).
 
-![](<media/25.jpg>)
+![](<media/manage_connections.png>)
 
-> **Talking Point:** For this lab we are using the VSTS Git project. The next couple of steps will allow you to add the PartUnlimited source to the Git master repository.
+
+![](<media/connect_to_vsts.png>)
 
 **3.** Navigate to [https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps](https://github.com/MicrosoftLearning/edX-DEV212x-Intro-to-DevOps) and download the repository as a zip.
 
 ![](<media/download.png>)
 
-**4.** Create folder and save the download to this folder.
+**4.** Create a **Working Directory** to the following location:
 
-Create **Working Directory** to the following location:
+`C:\Source\Repos\PartsUnlimited`
 
-`C:\Source\Repos\HOL`
-
-**5.** Unzip the zip file. Note: when unzipping be sure and “Unblock” the content or the deployment scripts won’t run
+**5.** Extract the zip file to the working directory that you just created. Note: when extracting be sure and “Unblock” the content or the deployment scripts won’t run
 
 ![](<media/21.jpg>)
 
@@ -150,27 +143,11 @@ the page. Verify the source is in the repo.
 
 ![](<media/31.jpg>)
 
-**10.** Now it is time to create a local repo to work from, in the Team Explorer, click **Branches** -> Right click on **Master** -> **New Local Branch from**... 
-
-![](<media/32.jpg>)
-
-**11.** Add in the repo name (i.e. *HOLRepo*) and click **Create Branch**
-
-![](<media/33.jpg>)
-
-> **Note:** Publishing back to VSO when cloning a repo allow the build definition to see the new repo for building out the projects.
-
-**12.** Now we need to make sure the branch is discoverable from build, click on **Publish Branch**.
-
-![](<media/34.jpg>)
-
 ### 2. Create Continuous Integration Build
 
 A continuous integration build will give us the ability check whether the code
 we checked in can compile and will successfully pass any automated tests that we
 have created against it.
-
-> **NOTE:** If you migrated your code using the Git command line (1a above), you did not create an "HOLRepo" branch in your Git repo. For the purposes of the remainder of the lab, either use "master" in place of "HOLRepo", or create and push an "HOLRepo" branch based off of master.
 
 **1.** Go to your **account’s homepage**: 
 
