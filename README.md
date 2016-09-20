@@ -1,5 +1,5 @@
 # EdX Intro to DevOps #
-Welcome to the Hands on Labs repository for the [edX DEV212x Intro to DevOps course (Module 1)](https://www.edx.org/course/introduction-devops-microsoft-dev212x-0)
+Welcome to the Hands on Labs repository for the [edX DEV212x Intro to DevOps course (Module 1)](https://www.edx.org/course/introduction-devops-microsoft-dev212x-0).
 This repo contains all the source code and Hands on Lab manuals for the course.
 
 ## The LABs ##

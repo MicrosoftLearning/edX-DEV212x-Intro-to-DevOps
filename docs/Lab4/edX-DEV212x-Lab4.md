@@ -1,6 +1,8 @@
 # EdX DEV212x Intro to DevOps - LAB 4 #
 This is the Hands on Lab for module 4 of the Intro to DevOps course.
 
+> **NOTE:** VSTS is a rapidly evolving service, with releases coming every 3 weeks. Some of the images and instructions in this lab may change slightly so that they look different when you go through this lab. If you take a deep breath and think of the goal you're trying to achieve, you should be able to work out where to go even if the user interface does not exactly match the LAB.
+
 ## LAB 4 - Release Management with Visual Studio Team Services ##
 Once you have completed the videos and other course material for Module 4, you can continue with this lab.
 
@@ -9,9 +11,13 @@ in Visual Studio Team Services (VSTS) and a Continuous Integration build that bu
 runs unit tests whenever code is pushed to the master branch. Please refer to the
 [LAB 3](../Lab3/EdX212x-Lab3.md) in order to see how the CI build was set up.
 Now you want to set up Release Management (a feature of Visual Studio Team Services)
-to be able continuously deploy the application to an Azure Web App. Initially the
-app will be deployed to a `dev` deployment slot. The `staging` slot will require and
-approver before the app is deployed into it. Once an approver approves the `staging` slot,
+to be able continuously deploy the application to an Azure Web App. Azure Web Apps allow you to specify
+deployment slots - these can be used with Traffic Manager to perform A/B testing. Deployment slots
+are also commonly used for _hot swapping_. This allows you to deploy new code to a slot, test it and then
+hot swap it so that your site is never down. For the puroposes of this lab, we will use the slots to isolate
+changes being introduced into the environment for testing purposes. Initially the
+app will be deployed to a `dev` deployment slot. The `staging` slot will require an
+approver before the app is deployed into it. Once another approval is done on the `staging` slot,
 the app will be deployed to the production site.
 
 ## Pre-requisites:
@@ -34,100 +40,36 @@ MSA Account and certificate-based connections are not supported. For this HOL, y
 This will walk through creating a Visual Studio Team Services account, committing the PartsUnlimited source code
 and setting up the Continuous Integration (CI) build.
 
-**2. Modify the CI Build to include ARM Templates**
-The source code already defines the infrastructure required by the application in code (Infrastructure as Code). The
-code is a json file based on the Azure Resource Manager (ARM) template schema. You will use the template to deploy
-or update the infrastructure as part of the release.
-
-**3. Create a Service Endpoint in Visual Studio Team Services to an Azure Account.**
+**2. Create a Service Endpoint in Visual Studio Team Services to an Azure Account.**
 In this step you'll download your Azure publish settings file and create Service Endpoint in Visual Studio Team Services for
 your Azure account. This will enable you to configure deployment of the PartsUnlimited Website to Azure as an Azure
 Web Application from Builds or Releases.
 
-**4. Create a Release Pipeline for the Parts Unlimited Website.**
+**3. Create a Release Pipeline for the Parts Unlimited Website.**
 In this step, you will create a Release definition for the PartsUnlimited Website. You'll use the CI build output
 as the input artefact for the Release and then define how the release moves through `environments` with approvals
 in between.
 
-**5. Trigger a Release.**
+**4. Trigger a Release.**
 Once the Release Definition is set up, you will trigger a release and see the pipeline in action.
 
 # Hands On Lab
 ### 1: Complete HOL - Parts Unlimited Website Continuous Integration with Visual Studio Team Services
 Make sure you've completed [LAB 3](../Lab3/EdX212x-Lab3.md).
 
-### 2: Modify the CI Build to include the ARM Templates
-In order to deploy to Azure, you're going to to specify the infrastructure that the PartsUnlimited Website requires. For example,
-the site requires an Azure SQL Database and an Azure Web App. Rather than create these by hand, you are going to use the Azure
-Resource Manager (ARM) templates that describe this infrastructure in a json file. This is good practice, since you're
-describing infrastructure as code.
-
-The task that will deploy the ARM template will create the resource group if it does not exist. If the resource group does
-exist, then the template is used to update the existing resources.
-
-> **Note:** The infrastructure described in the ARM templates for this HOL will create resources that are not free.
-It creates an Azure Web App with 3 deployment slots. Deployment slots are only available on Standard or Premium App Service Plans.
-They are **not** available on Free or Basic plans. Once you've completed this lab, you probably want to delete the resource
-group in order to minimize charges to your Azure account.
-
-1. Log into your VSTS account and click on the BUILD hub.
-2. Click the HOL Build that you configured in the Continuous Integration HOL, and click "Edit".
-3. Click the "Visual Studio Build" task and modify the **MSBuild** parameters as follows:
-    ```script
-    /p:DeployOnBuild=true   
-    /p:WebPublishMethod=Package     
-    /p:PackageAsSingleFile=true     
-    /p:SkipInvalidConfigurations=true     
-    /p:PackageLocation="$(build.stagingDirectory)"
-    ```
-    ![](media/54.png)
-    
-4. Click the "Copy and Publish Build Artifacts" task and update it to look as follows:
-
-	![](media/48.png)
-	* This constrains the `drop` folder to contain only the WebDeploy zip file, which is a package containing
-	the website.
-5. Click "+ Add build step..." and add a new "Publish Build Artifacts" task. Configure it as follows:
-
-	![](media/49.png)
-	* For `Path to Publish`, click the "..." button and browse to the PartsUnlimitedEnv/Templates folder
-	* For `Artifact Name`, enter "ARMTemplates"
-	* For `Artifact Type`, select "Server" 
-6. Queue a new build by clicking the "Queue build" button. Accept the defaults and click OK.
-7. When the build has completed, verify that there are 2 folders: drop and ARMTemplates. The can be found under the Artifacts tab of the build results.
-
-	![](media/viewArtifacts.png)
-	* The drop folder should contain a single file: PartsUnlimitedWebsite.zip (click "Explore" to view the contents)
-	* The ARMTemplates folder should contain a number of json files.
-
-### 3: Create a Service Link from Visual Studio Team Services to an Azure Account
+### 2: Create a Service Link from Visual Studio Team Services to an Azure Account
 In order to interact with Azure, you'll need to create a Service Endpoint in VSTS. This Endpoint includes the
 authentication information required to deploy to Azure.
 
 > **Note**: Deploying [ARM Templates](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authoring-templates/)
 to Azure from Release Management requires a [Service Principal](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-build-release-management.aspx).
-Microsoft Accounts (like the one you're likely using to sign into Azure), Organization Acounts and certificate-based connections are not supported. For this HOL, you will need to create a Service Principal (which resides inside an Azure Active Directory). Until recently, you could simply use an organizational account, however security changes in Azure now require a Service Principal. 
 
-> Unfortunately, creating a Service Principal is not trivial. This part of the lab will require substantial independent work, as the steps are currently complicated. Microsoft is working on making this easier. 
+When you create a new Service Endpoint in VSTS, a wizard pops up. The wizard has two "modes": automatic or manual. This lab will walk through the manual method - however, you should first attempt the **automatic** method.
+![](media/55.png)
 
-1. Find you Subscription Name and Subscription ID
-	* Browse to http://portal.azure.com and click on "Subscriptions".
-	![](media/4.png)
-	* Copy the Subscription Id and Subscription Name for your Azure subscription. 
-	
-1. Create a Service Principal.
+- **PowerShell Script** if you do not see any subscriptions, then you will have to click on the [link](https://www.visualstudio.com/en-us/docs/release/author-release-definition/understanding-tasks#azure-resource-manager-service-endpoint) provided in the dialog and follow the instructions. The link will have a PowerShell script that you will download. The script will output several pieces of information which you will fill in on corresponding fields in the wizard.
 
-	There are three avenues to create a Service Principal. Follow the instructions very carefully for the approach you are using.  You will need to retrieve the following information to enter into VSTS Release Management: Subscription Id, Subscription Name, Service Principal Id, Service Principal Key, and Tenant Id. If you don't want to install either Azure Powershell or the Azure CLI, then use the Web browser approach.
-
-	* **Azure Powershell** (on Windows) can be found at [Automating Azure Resource Group deployment using a Service Principal in Visual Studio Online: Build/Release Management](https://blogs.msdn.microsoft.com/visualstudioalm/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-buildrelease-management/)
-	
-	Unfortunately, the graphics in the above link are outdated.  However, You will only need to follow the first steps and run [this Powershell](https://raw.githubusercontent.com/Microsoft/vso-agent-tasks/master/Tasks/DeployAzureResourceGroup/SPNCreation.ps1) script. That will return the information you need.
-	
-	Alternatively, you can visit [Use Azure PowerShell to create an Active Directory application to access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal/) to gather the required information.  This takes you through each step.  And gets the required information.
-	* **Azure CLI** (on Mac, Linux and other non-Windows operating systems) can be found at [Use Azure CLI to create an Active Directory application to access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal-cli/)
-	* **Web browser** (on any OS) can be found at [Use portal to create Active Directory application that can access resources](https://azure.microsoft.com/en-us/documentation/articles/resource-group-create-service-principal-portal/). Be sure to get the Client ID (which will be used as the Service Principal Id, and the Key (which will be used as the Service Principal Key).  
-	
-2. Create an Azure Service Endpoint in Visual Studio Team Services
+1. Create an Azure Service Endpoint in Visual Studio Team Services
 	* Log in to your VSTS account.
 	* Open the project administration page by clicking the gear icon in the upper right.
 	
@@ -136,23 +78,28 @@ Microsoft Accounts (like the one you're likely using to sign into Azure), Organi
 	
 		![](media/2.png)
 	* Click on "New Service Endpoint" and select "Azure Resource Manager" from the list
+
+	* First attempt to click the link for creating the connection automatically.
+	> **Note**: Automatic only works if you are signed into VSTS using an account that is linked to an Azure subscription in the Azure Portal. The wizard will prompt you to select the Azure Susbscription and then automatically create the Service Principal. If this works, skip to the next task.
 	
-		![](media/serviceEndpoint.png)
-	* Come up with a memorable Connection Name, then enter the Subscription Id, Subscription Name, Service Principal Id, Service Principal Key, and Tenant Id you gathered in the previous steps. Click OK.
+	* If you do not see any subscriptions listed in the Automatic dialog, then click on the link to create the Service Principal manually. Download the PowerShell script and run it. When the script completes, it will give you values for all the fields in the Wizard.
+
+		![](media/56.png)
 	
-		![](media/enterServiceEndpointData.png)
-	* You should see a new Service Endpoint. You can close the project administration page.
+	* When you have filled in the fields, click "Verify connection" to verify the connection. Click OK to close the dialog.
 	
-### 4: Create a Release Definition
-Now that you have an Azure Service Endpoint to deploy to, and a package to deploy (from your CI build),
+	* You should see a new Service Endpoint in the list of endpoints on the left of the Endpoints page. You can close the project administration page.
+	
+### 3: Create a Release Definition
+Now that you have an Azure Service Endpoint to deploy to, and a package to deploy (the output from your build),
 you can create a Release Definition. The Release Definition defines how your application moves through
 various Environments, including Tasks to update infrastructure, deploy your application, run scripts and
-run tests. You can also configure incoming or outgoing approvals for each Environment.
+run tests. You can also configure incoming (pre) or outgoing (post) approvals for each Environment.
 
 An Environment is simply a logical grouping of tasks - it may or may not correspond to a set of machines.
-For this Release Definition, you will create 3 Environments: Dev, Staging and Production.
+For this Release Definition, you will create three environments: Dev, Staging and Production.
 
-The infrastructure required for all 3 environments is described in an ARM Template. The ARM Template will
+The infrastructure required for all three environments is described in an ARM Template. The ARM Template will
 be invoked during the deployment in the Dev Environment before deploying the website to Dev. It will not
 be necessary to run any infrastructure tasks during Staging or Production deployments in this case. 
 
@@ -394,7 +341,7 @@ Close the task selector dialog.
 	the target environment if you want to deploy to Production. This is of course 
 	configurable according to your own preference.
 
-### 5: Create a Release
+### 4: Create a Release
 Now that you have configured the Release Pipeline, you are ready to trigger a complete
 release.
 	
