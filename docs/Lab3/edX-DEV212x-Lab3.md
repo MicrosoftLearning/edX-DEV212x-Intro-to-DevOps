@@ -89,7 +89,7 @@ Congratulations, your code should now be in VSTS!
 
 ### 1b: Import Source Code into your VSTS Account with Visual Studio
 
-> Note: Use this to approach to use the Visual Studio to migrate code from GitHub to VSTS. If you use this approach, skip section 1a.  ** *If you have any difficulties with this approach, please use the Git command line approach above. It is much simpler, and far less prone to error.* **
+> Note: Use this to approach to use the Visual Studio to migrate code from GitHub to VSTS. If you use this approach, skip section 1a.  **We recommend going through approach 1a because history isn't migrated over when downloading the zip file from GitHub in approach 1b.**
 
 We want to push the application code to your Visual Studio Team Services account in
 order to use Build.
@@ -116,32 +116,32 @@ page**:
 
 **5.** Extract the zip file to the working directory that you just created. Note: when extracting be sure and “Unblock” the content or the deployment scripts won’t run
 
-![](<media/21.jpg>)
+![](<media/extract_parts_unlimited.png>)
 
 **6.** Clone the repo of your team project to the location where you extracted the sample
 
 Set the **Working Directory** to the following location:
 
-`C:\Source\Repos\HOL`
+`C:\Source\Repos\PartsUnlimited`
 
-![](<media/26.jpg>)
+![](<media/clone_vsts_repo_vs.png>)
 
 **7.** Click Open and navigate to the Parts Unlimited Project Solution in Solution Explorer
 
-![](<media/27.jpg>)
+![](<media/open_pu_solution.png>)
 
 **8.** Now we will add the source to the Git repo. Right click on the solution and click **Add to Source Control**.
 
-![](<media/29.jpg>)
+![](<media/add_solution_to_source_control.png>)
 
-**7.** The Changes windows will appear, add in checkin text and verify the source is ready to be committed. Click on **Commit and Push**.
+**7.** The Changes windows will appear, add in checkin text and verify the source is ready to be committed. Click on **Commit and Sync**. Committing the changes will only record the edits in the local repository, so we will also sync the commits (pull for any new commits from VSTS, then push our commits to VSTS). 
 
-![](<media/30.jpg>)
+![](<media/commit_and_sync.png>)
 
 **9.** Once the changes have been committed, click on the **Code** hub at the top of
 the page. Verify the source is in the repo.
 
-![](<media/31.jpg>)
+![](<media/parts_unlimited_vsts.png>)
 
 ### 2. Create Continuous Integration Build
 
@@ -149,97 +149,85 @@ A continuous integration build will give us the ability check whether the code
 we checked in can compile and will successfully pass any automated tests that we
 have created against it.
 
-**1.** Go to your **account’s homepage**: 
+**1.** Since Visual Studio Team Services is already open in a browser, from the **Code** hub, click on the the **Build** hub at the top of the page.
 
-	https://<account>.visualstudio.com
+![](<media/build_hub.png>)
 
+**2.** In the build hub, click on the **New definition** button to create a new build definition.
 
-**2.** Click **Browse** and then select your team project and click
-**Navigate**.
+![](<media/create_new_definition.png>)
 
-![](<media/22.jpg>)
+**3.** In the "Create new build definition" panel, select **Visual Studio Build** as the template for the definition and then click next.
 
-**3.** Once on the project’s home page, click on the **Build** hub at the top of
-the page.
+![](<media/select_vs_template.png>)
 
-![](<media/23.jpg>)
+**4.** After clicking the **Next** button, select the PartsUnlimited Git repository, keep the default branch to build as master, check the **Continuous Integration** checkbox (to trigger a build upon every commit to master), and keep the Hosted queue as the default agent queue.
 
-**4.** Click the **green “plus” sign**, select **Visual Studio** build definition, and then click **Next**.
+![](<media/select_repo_trigger_queue.png>)
 
-![](<media/24.1.jpg>)
+> **Note:** For this example, we will be using the [hosted agent](https://www.visualstudio.com/en-us/docs/build/admin/agents/hosted-pool) in Visual Studio Team Services. If you are using on-premises TFS at your organization, you will only be able to use on-premises agents (not hosted).
 
->**Note:** As you can see, you can now do Universal Windows Apps & Xamarin Android/IOS Builds as well as Xcode builds.
+**5.** In the **Build** tab of the new build definition that you just created, leave the NuGet restore task as it is with the defaults. The NuGet packages will be restored for the solution in this step. 
 
-**5.** After clicking the **Next** button, select **HOL Team Project**, select **HOL** Repository, select **HOLRepo** as the default branch and check **Continuous Integration** then click **Create**.
+![](<media/nuget_restore.png>)
 
-> **Note:** For this HOL, we created another agent queue (**HOL Pool**) but using the **Default or Hosted** queue in VSTS will work as well.
-
-![](<media/24.2.jpg>)
-
-> **Note:** We may have multiple repos and branches, so we need to select the correct Repo and Branch before we can select which Solution to build.
-
-**6.** After clicking the **Create** button, On the **Build** tab, and click the **ellipsis** in the Build Solution pane. Select the PartsUnlimited solution file.
-
-![](<media/24.3.jpg>)
-
-**7.** On the **Visual Studio Build** task, now enter the following information to **MSBuild** Arguments:
+**6.** On the **Build solution** task, leave the path to the solution as it is (will search for any solution files in the repository and there is only one). Enter the following information to the **MSBuild** Arguments. These arguments will create a Web Deploy (MSDeploy) package for PartsUnlimited into a single zip file in preparation for deployment in Lab 4 and place the package into the artifact staging directory of the agent. 
     
-    /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=$(build.artifactstagingdirectory)
+    /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=$(Build.ArtifactStagingDirectory)
       
-> **Note:** Add all the **MSBuild** parameters will be one after the other with spaces between them.
+> **Note:** Add all of the **MSBuild** parameters one after the other with spaces between them.
 
-![](<media/24.4.jpg>)
+![](<media/add_msbuild_args.png>)
 
-**8.** On the **Visual Studio Build** task, we want to restore the nuget packages for the PartsUnlimited solution . Check **Restore Nuget Packages**.
+**7.** The rest of the tasks accomplish the following:
+	Test Assemblies - Searches for automated test dlls in the compiled code after build and runs the tests locally.
+	Publish symbols path - Publishes symbols (if specified) for debugging purposes. 
 
-![](<media/24.9.jpg>)
+**8.** Remove the **Copy Files to: $(build.artifactstagingdirectory)** task with the "X" to the right of the task. Then, click the "Add build step..." button above the tasks to add a new task to copy and publish build artifacts. 
 
-**9.** Since the PartUnlimited project has passing and failing tests, click **Continue on Error** checkbox. 
+![](<media/remove_copy_task.png>)
 
-> **Talking Points:** If you do not want the build to fail, clicking ”**Continue On Error**” checkbox will allow the build will partially succeed which can be used in a **Release** that is part of **Continuous Delivery**, if necessary.
+> **Note:** Since we specify to place the package in the artifact staging directory in the MSBuild argument in step 6, we can specify the artifact staging directory to copy and publish in one step for simplicity. 
 
-![](<media/24.6.jpg>)
+**9.** In the task catalog, click on the **Utility** tab and add a **Copy and Publish Build Artifacts** task to add it to the build definition. The order of the task (before or after the "Publish Artifact: drop" task) does not matter as long as it is after the "Publish symbols path" task. 
 
-**10.** Click on the **Trigger** tab, to make sure the **Build** fires off every time there’s a check in, check the **Continuous integration (CI)** checkbox. Also make sure the filter to include **HOLRepo** and **Batch Changes** checkbox is unchecked
+![](<media/add_copy_publish_build_artifacts.png>)
 
-![](<media/24.7.jpg>)
+**10.** In the **Copy Publish Artifacts** task that you just added, set the Copy Root to `$(Build.ArtifactStagingDirectory)` (where the packaged was pushed), set the Contents to `**\*.zip`, set the Artifact Name to "drop", and choose "Server" as the Artifact Type in the dropdown. This will copy any zip files in the folder and publish them as build artifacts. 
 
-> **Note:** To enable Continuous integration in your project, check the **Continuous integration (CI)** checkbox. You can select which branch you wish to monitor, as well.
+![](<media/update_copy_publish_artifact.png>)
 
-**11.** Select the **Copy Files** task, and input the **Contents** value
-with the following:
+**11.** Click on the **Publish artifact: drop** task and change the Path to Publish to be `src/env/PartsUnlimitedEnv/Templates`. Then, rename the Artifact Name to be "ARMTemplates." Since we're already publishing the PartsUnlimited zip file as a build artifact in the previous step, we will use this task instead to publish the Azure Resource Manager (ARM) templates for use in Lab 4.
 
-	 *.zip
-	
-![](<media/24.8.jpg>)
+![](<media/publish_arm_templates.png>)
 
-**12.** Click **Save** and give the build definition a name (i.e.
-*“HOL Build”*).
+**12.** Click on the **Save** button to save the build definition and give it a name. 
 
-![](<media/41.jpg>)
+![](<media/save_build_definition.png>)
 
 ### 3. Test the CI Trigger in Visual Studio Team Services
 
 We will now test the **Continuous Integration build (CI)** build we created in *Task 2* by changing code in the Parts Unlimited project with Visual Studio Team Services.
 
-**1.** Click **Code** hub and then select your your repo, **HOLRepo**. Navigate to **Controllers/HomeController.cs** in the PartsUnlimited project, then click **Edit**.
+**1.** Click on the **Code** hub and then select your repo, such as "PartsUnlimited". Navigate to **src/src/PartsUnlimitedWebsite/Controllers/HomeController.cs** in the PartsUnlimited project, then click **Edit**.
 
-![](<media/45.jpg>)
+![](<media/open_home_controller.png>)
 
-**2.** After clicking **Edit**, add in text (i.e. *This is a test*) to the top of the constuctor of the **HomeController.cs** file. Once complete, click **Save**.
+**2.** After clicking **Edit**, add in a comment (e.g. `//comment`) to the top of the constuctor of the **HomeController.cs** file. Once complete, click **Save**. The Save button will actually commit the change on the master branch to the Git repo in VSTS and will automatically trigger a build.
 
-![](<media/46.jpg>)
+![](<media/edit_home_controller.png>)
 
-**3.** Click **Build** hub, then click the **Queue** link. This should have triggered the build definition we previously created.
+**3.** Click the **Build** hub and note that a build has queued that was requested by your username. Click on the build number (such as "#20160920.1") to view the build's progress.
 
-![](<media/47.jpg>)
+![](<media/view_running_build.png>)
 
-**4.** Click on the **Build Number**, and you should get a build summary similar to this, which includes test results.
+**4.** The console will show the log of the running build and should show that the build succeeded. If you click on the Build Number at the left panel, you can view the build summary as well. 
 
-![](<media/49.jpg>)
+![](<media/view_build_console.png>)
 
-## Congratulations!
-You've completed this HOL!
+![](<media/view_build_summary.png>)
+
+In this lab, you learned how to add an existing Git repo to a project in Visual Studio, create a Continuous Integration build definition to compile, test, and publish build artifacts, and the end-to-end workflow of committing code to master and automatically triggering a build. 
 
 ## Further Reading
 1. [Release Management for Visual Studio Team Services](https://msdn.microsoft.com/Library/vs/alm/release/overview-rmpreview)
