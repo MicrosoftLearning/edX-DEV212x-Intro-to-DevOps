@@ -88,7 +88,10 @@ When you create a new Service Endpoint in VSTS, a wizard pops up. The wizard has
 	
 	* When you have filled in the fields, click "Verify connection" to verify the connection. Click OK to close the dialog.
 	
+		![](media/57.png)
 	* You should see a new Service Endpoint in the list of endpoints on the left of the Endpoints page. You can close the project administration page.
+
+		![](media/58.png)
 	
 ### 3: Create a Release Definition
 Now that you have an Azure Service Endpoint to deploy to, and a package to deploy (the output from your build),
@@ -105,33 +108,35 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 
 1. Create a Release Definition to Deploy Infrastructure and Deploy to Dev
 	* In VSTS, click on the Release hub
-	* Click on the green + button at the top of the left hand menu to create a new definition. This will
-	launch a wizard prompting you to select a deployment template. Click on "Empty" to start with an empty
-	release and click OK.
+	* If you have no release definitions yet, you will be prompted to create one. Otherwise, click on the green + button at the top of the left hand menu to create a new definition. This will
+	launch a wizard prompting you to select a deployment template.
+
+		![](media/59.png)
 	
-	![](media/6.png)
-	* The template has created a single Environment (called Default Environment).
-	* Enter "PartsUnlimited" into the name field at the top to name this Release Definition.
-	* Before completing the "Azure Web App Deployment" task, you'll need to configure the source package. Click on 
-	the "Artifacts" link.
+	Click on "Empty" to start with an empty	release and click OK.
+
+	* Select the PartsUnlimited Build that you created in Lab 3. Enable "Continuous Deployment" to queue a release whenever a new successful build is available. Ensure that the "Hosted" queue is selected in the Queue settings:
+
+	![](media/60.png)
 	
-	![](media/7.png)
-	* Click the "Link to a build definition" link.
-	
-	![](media/8.png)
-	* You'll now link this Release Definition to the CI build. Select the Project and Build from the drop downs and click Link.
-	
-	![](media/9.png)
-	> **Note:** It is possible to Link other package sources, but you only need the CI build for this Release.
-	
-	* Click on the Environments link to go back to the Environments page. 
-	
-	* Click the name label on the Default Environment card and change the name to "Dev".
+	* Click "Create"
+	* The template has created a single Environment (called Environment 1).
+	* Click the pencil icon next to the name and rename this Release Definition to "PartsUnlimited".
+
+	![](media/61.png)
+
+	* Click the Save button to make sure that you can save the Release Definition. You do not have to enter comments when saving.
+
+	* Click the name label on the the first environment card and change the name to "Dev".
 	
 		![](media/12.png)
 	
-	* Click on the "+ Add tasks" button to add a task for this environment. In the "Deploy" group, click the "Add"
-	button next to "Azure Resource Group Deployment" to add the task. Close the "ADD TASKS" dialog.
+	* Click on the "+ Add tasks" button to add a task for this environment. If you are presented with the following dropdown, then cancel and click the button again, since we do not need "containers" for this release.
+		![](media/62.png)	
+		
+		> **Note**: It is possible to create "containers" of tasks - some that run on agent and some that run on the server. At present, the only "server" task that exists is the Manual Intervention task. All other tasks are "agent" tasks.
+
+		In the "Deploy" group, click the "Add" button next to "Azure Resource Group Deployment" to add the task. Close the "ADD TASKS" dialog.
 	
 		![](media/42.png)
 		
@@ -139,7 +144,7 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 		* `Azure Connection Type`: select "Azure Resource Manager"
 		* `Azure RM Subscription`: select the Azure endpoint that you created in Task 2
 		* `Action`: select "Create or Update Resource Group"
-		* `Resource Group`: enter a name for your resource group. This must be unique in your Azure
+		* `Resource Group`: select an existing name (if any) or enter a name for your resource group. This must be unique in your Azure
 		subscription.
 		* `Location`: select an Azure geographic location
 		* `Template`: click the "..." button and browse to the FullEnvironmentSetupMerged.json file in the ARMTemplates
@@ -162,13 +167,14 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 		-PartsUnlimitedServerAdminLoginPassword (ConvertTo-SecureString '$(AdminPassword)' -AsPlainText -Force) 
 		-PartsUnlimitedServerAdminLoginPasswordForTest (ConvertTo-SecureString '$(AdminTestPassword)' -AsPlainText -Force)
 		```
-		You will shortly define the values for each parameter, like `$(ServerName)`, in the Environment variables.
-		
+				
 		> **Note**: If you open the FullEnvironmentSetupMerged.param.json file, you will see empty placeholders for these parameters.
 		> You could hard code values in the file instead of specifying them as "overrides". Either way is valid. If you do specify
 		> values in the params file, remember that in order to change values, you would have to edit the file, commit and create a 
 		> new build in order for the Release to have access the new values.
 		
+		* `Enable Deployment Prerequisites`: Leave this unchecked - this enables WinRM for Virtual Machines. The template we are deploying does not have virtual machines, so we leave this setting unchecked.
+		You will shortly define the values for each parameter, like `$(ServerName)`, in the Environment variables.
 		* Make sure the `Output -> Resource Group` parameter is empty. It is not required for this release.
 		* Your configuration should look something like the following:
 		![](media\configureArmStep.png)
@@ -199,7 +205,7 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 
 	![](media/45.png)
 	
-	* Select the latest build from the drop-down, and then select "Dev" as the target environment.
+	* Select the latest build from the drop-down. You will see that deployment to the "Dev" environment is set to automatic, meaning that it will run the tasks for the "Dev" environment immediately after creating the release.
 	Click "Create" to start the release.
 
 	![](media/46.png)
@@ -217,31 +223,30 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 
 	![](media/52.png)
 	
-	> NOTE: You can run this task repeatedly, it is idempotent. Additionally, updates to the underlying template will modify an already deployed Resource Group.
+	> NOTE: You can run this task repeatedly, since it is _idempotent_. Additionally, updates to the underlying template will modify an already deployed Resource Group.
 	
 1. Add Web Deployment Tasks to Deploy the Web App
 
 	Now that the infrastructure deployment is configured, you can add a task to deploy the web app to Dev.
 		
 	* Click on the Dev environtment in the Release Definition. Then click "+ Add tasks".
-	* Select the "Deploy" group in the left and click the add button next to "Azure Web App Deployment" to add the task.
+	* Select the "Deploy" group in the left and click the add button next to "AzureRM Web App Deployment" (not Azure Web App Deployment - make sure you select the AzureRM task) to add the task.
 Close the task selector dialog.
 	* Click on the "Azure Web App Deployment" Task. And configure according to the steps below.
-		* `Azure Subscription`: select the Azure Service Endpoint you created earlier in the Azure Subscription drop down.
-		* `Web App Location`: use the same Azure region for your Web App that you selected in the "Azure Resource Group Deployment" task
+		* `AzureRM Subscription`: select the AzureRM Service Endpoint you created earlier
 		* `Web App Name`: enter `$(WebsiteName)` to use a variable. You defined this variable earlier when deploying
+		* Check the `Deploy to Slot` checkbox to open settings for the deployment slot
+		* `Resource Group`: Select (or enter) the same resource group that you entered in the Azure Deployment task
 		* `Slot`: enter "dev". This will deploy the site to the "dev" deployment slot. This allows you
 		to deploy the site to an Azure deployment slot without affecting the Production site.
-		* `Web Deploy Package`: click the ellipsis (...) button and browse to the PartsUnlimitedWebsite.zip file and click OK.
+		* `Package`: click the ellipsis (...) button and browse to the PartsUnlimitedWebsite.zip file and click OK.
 	
 		![](media/10.png)
-		* `Additional Arguments`: clear the "Additional Arguments" parameter as the ARM template you deployed has already configured all the slot-specific
-		app settings and connection strings.
 		* The Task should look like this:
 	
 		![](media/11.png)
 	> **Note**: It is a good practice to run smoke tests to validate the website after deployment, or to run load tests. The code-base you are using
-	does not have any such tests defined. You can also run quick cloud-performance tests to validate that the site is up and running. For more 
+	does not have any such tests defined. You can also add a task to run quick cloud-performance tests to validate that the site is up and running. For more 
 	information on quick load tests, see [this video](https://channel9.msdn.com/Events/Visual-Studio/Connect-event-2015/Cloud-Loading-Testing-in-Visual-Studio-Team-Service)
 	from around the 6 minute mark. 
 	
@@ -290,7 +295,8 @@ Close the task selector dialog.
 	* Click the ellipsis (...) on the Dev Environment card and select "Clone environment".
 	
 	![](media/28.png)
-	* A new Environment is created. Enter "Staging" for the name.
+	* Leave the dialog with the default values. You will assign approvers for the Staging environment shortly. You also want the trigger for the Staging environment to be a successful deployment to Dev (the default trigger).
+	* A new Environment (called "Copy of Dev") appears. Rename the Environment to "Staging".
 	* Delete the "Azure Resource Group Deployment" task. This is not required in this Environment since the ARM template deployed
 	the infrastructure for all 3 environments.
 	* Click the ellipsis (...) on the Staging Environment card and select "Configure variables".
@@ -310,43 +316,30 @@ Close the task selector dialog.
 	for the current environment.<br/>
 	**Approvers** can be individuals or groups.
 	
-	* In this case, you want to pause the deployment coming in. This ensures that if someone is testing in the Staging environment,
+	* In this case, you want to pause the deployment coming into Staging. This ensures that if someone is testing in the Staging environment,
 	they don't suddenly get a new build unexpectedly.
-	* Configure approvers for the Staging environment
+	* Configure approvers and notifications for the Staging environment.
 	
 	![](media/33.png)
+
+	> **Note**: Clicking "More Options" on the pre- or post-approval sections allows you to define approval rules for the list of users.
 	
 	* Save the Release Definition.
 
 	* Clone the Staging environment to Production.
-		* Update the Slot parameter to be empty (i.e. the site will deploy to the production slot)
+		* Uncheck the "Deploy to Slot" setting. If no slot is specified, the web app will be deployed to the production slot.
 		* Update the approvers - again, you can be both approvers.
 	
 	* Save the Release Definition.
 	
 	![](media/34.png)
 	
-1. Configure Continuous Deployment for this Release Definition
-	* Click on the Triggers link of the Release Definition.
-	* Check the "Continuous Deployment" check box.
-	* Set the Source Label and Target environment.
-	> Selecting the build as the trigger means that any time the artifact build
-	completes, a new release will automatically start using the latest build.
-	
-	![](media/35.png)
-	
-	> **Note:** Since the incoming build for this release is a CI build, you probably
-	don't want to deploy the build all the way to Production. Setting the Release to
-	stop at Dev means that you will need to create a new Release with Production as 
-	the target environment if you want to deploy to Production. This is of course 
-	configurable according to your own preference.
-
 ### 4: Create a Release
 Now that you have configured the Release Pipeline, you are ready to trigger a complete
 release.
 	
 * Click on "+ Release" to create a new Release.
-* Select the latest build, set Production as the target Environment and click Create.
+* Select the latest build from the build list and click Create.
 
 	![](media/36.png)
 	
