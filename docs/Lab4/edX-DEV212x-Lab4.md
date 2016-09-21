@@ -29,11 +29,6 @@ the app will be deployed to the production site.
 > **Note**: In order to use deployment slots, you'll need to configure the Web App to use Standard or Premium App Service Plan mode. You **cannot** create
 deployment slots for Basic or Free Azure Web Apps. To learn more about deployment slots, see [this article](https://azure.microsoft.com/en-us/documentation/articles/web-sites-staged-publishing/).
 
-* An organizational account that is a co-administrator on your Azure account
-> **Note**: This is required because deploying [ARM Templates](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authoring-templates/)
-to Azure requires an organizational account or a [Service Principal](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/04/automating-azure-resource-group-deployment-using-a-service-principal-in-visual-studio-online-build-release-management.aspx).
-MSA Account and certificate-based connections are not supported. For this HOL, you will use an organizational account.
-
 ## Tasks Overview:
 
 **1. Complete [LAB 3](../Lab3/EdX212x-Lab3.md).**
