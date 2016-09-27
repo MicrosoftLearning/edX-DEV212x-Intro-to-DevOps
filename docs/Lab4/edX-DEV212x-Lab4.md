@@ -22,8 +22,8 @@ the app will be deployed to the production site.
 
 ## Pre-requisites:
 
-* You have completed [LAB 1](../Lab3/EdX212x-Lab1.md)
-* You have completed [LAB 3](../Lab3/EdX212x-Lab3.md)
+* You have completed [LAB 1](../Lab3/edX-DEV212x-Lab1.md)
+* You have completed [LAB 3](../Lab3/edX-DEV212x-Lab3.md)
 
 * An active Azure account to host the PartsUnlimited Website as a Web App
 > **Note**: In order to use deployment slots, you'll need to configure the Web App to use Standard or Premium App Service Plan mode. You **cannot** create
@@ -31,7 +31,7 @@ deployment slots for Basic or Free Azure Web Apps. To learn more about deploymen
 
 ## Tasks Overview:
 
-**1. Complete [LAB 3](../Lab3/EdX212x-Lab3.md).**
+**1. Complete [LAB 3](../Lab3/edX-DEV212x-Lab3.md).**
 This will walk through creating a Visual Studio Team Services account, committing the PartsUnlimited source code
 and setting up the Continuous Integration (CI) build.
 
@@ -50,7 +50,7 @@ Once the Release Definition is set up, you will trigger a release and see the pi
 
 # Hands On Lab
 ### 1: Complete HOL - Parts Unlimited Website Continuous Integration with Visual Studio Team Services
-Make sure you've completed [LAB 3](../Lab3/EdX212x-Lab3.md).
+Make sure you've completed [LAB 3](../Lab3/edX-DEV212x-Lab3.md).
 
 ### 2: Create a Service Link from Visual Studio Team Services to an Azure Account
 In order to interact with Azure, you'll need to create a Service Endpoint in VSTS. This Endpoint includes the
