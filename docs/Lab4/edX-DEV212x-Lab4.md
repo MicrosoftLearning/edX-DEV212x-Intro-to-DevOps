@@ -172,7 +172,7 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 		You will shortly define the values for each parameter, like `$(ServerName)`, in the Environment variables.
 		* Make sure the `Output -> Resource Group` parameter is empty. It is not required for this release.
 		* Your configuration should look something like the following:
-		![](media\configureArmStep.png)
+		![](media/configureArmStep.png)
 		
 	* Click on the ellipsis (...) button next to the Environment and select "Configure variables..."
 
@@ -225,9 +225,9 @@ be necessary to run any infrastructure tasks during Staging or Production deploy
 	Now that the infrastructure deployment is configured, you can add a task to deploy the web app to Dev.
 		
 	* Click on the Dev environtment in the Release Definition. Then click "+ Add tasks".
-	* Select the "Deploy" group in the left and click the add button next to "AzureRM Web App Deployment" (not Azure Web App Deployment - make sure you select the AzureRM task) to add the task.
+	* Select the "Deploy" group in the left and click the add button next to "Azure App Service Deploy" to add the task.
 Close the task selector dialog.
-	* Click on the "Azure Web App Deployment" Task. And configure according to the steps below.
+	* Click on the "Azure App Service Deploy" Task. And configure according to the steps below.
 		* `AzureRM Subscription`: select the AzureRM Service Endpoint you created earlier
 		* `Web App Name`: enter `$(WebsiteName)` to use a variable. You defined this variable earlier when deploying
 		* Check the `Deploy to Slot` checkbox to open settings for the deployment slot
