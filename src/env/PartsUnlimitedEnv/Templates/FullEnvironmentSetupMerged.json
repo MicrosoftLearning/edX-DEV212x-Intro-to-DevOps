@@ -225,7 +225,7 @@
         {
             "name": "[concat(parameters('WebsiteName'), '-Insights')]",
             "type": "Microsoft.Insights/components",
-            "location": "easdtus",
+            "location": "eastus",
             "apiVersion": "2014-04-01",
             "tags": {
                 "displayName": "insightsComponents"
